@@ -1,9 +1,18 @@
 'use client';
+import { supabase } from '@/services/supabaseClient';
 
 export default function AuthPage() {
-  const handleGoogleSignIn = () => {
+  const  handleGoogleSignIn = async () => {
     // Handle Google authentication here
     console.log('Google sign-in clicked');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      
+    });
+
+    if (error) {
+      console.error('Error signing in with Google:', error);
+    } 
   };
 
   return (
