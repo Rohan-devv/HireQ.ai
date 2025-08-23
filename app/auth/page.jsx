@@ -1,18 +1,29 @@
 'use client';
-import { supabase } from '@/services/supabaseClient';
+
+import { supabase } from '../../services/supabaseClient';
 
 export default function AuthPage() {
-  const  handleGoogleSignIn = async () => {
-    // Handle Google authentication here
-    console.log('Google sign-in clicked');
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+  const handleGoogleSignIn = async () => {
+    try {
+      console.log('Starting Google authentication...');
       
-    });
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
 
-    if (error) {
-      console.error('Error signing in with Google:', error);
-    } 
+      if (error) {
+        console.error('Error signing in with Google:', error);
+        alert(`Authentication error: ${error.message}`);
+      } else {
+        console.log('Google authentication initiated successfully:', data);
+      }
+    } catch (error) {
+      console.error('Unexpected error during Google sign-in:', error);
+      alert('An unexpected error occurred. Please try again.');
+    }
   };
 
   return (
